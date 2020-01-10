@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Pietro Marchesi" />
+<meta name="description" content="TL;DR: With little effort, you can get a lot more from your data than by just comparing means and plotting bar plots: a recent paper elaborates on graphical methods that could be an good addition to your data analysis toolbox." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Pietro Marchesi"/>
+<meta property="og:title" content="You can do more than the average"/>
+<meta property="og:description" content="TL;DR: With little effort, you can get a lot more from your data than by just comparing means and plotting bar plots: a recent paper elaborates on graphical methods that could be an good addition to your data analysis toolbox."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./robust-graphical-methods.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-06-20 00:00:00+02:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/pietro-marchesi.html">
+<meta property="article:section" content="Pietro's Data Bulletin"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
+
+  <title>Pietro Marchesi &ndash; You can do more than the average</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+      </a>
+      <h1><a href=".">Pietro Marchesi</a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about.html#about">About</a></li>
+
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
+          <li><a href="/category/some-other-stuff.html" target="_blank">some other stuff</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+    <h1 id="robust-graphical-methods">You can do more than the average</h1>
+    <p>
+          Posted on 20 June 2017 in <a href="./category/pietros-data-bulletin.html">Pietro's Data Bulletin</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><strong>TL;DR</strong>: With little effort, you can get a lot more from your data than by just comparing means and plotting bar plots: a recent paper elaborates on graphical methods that could be an good addition to your data analysis toolbox.</p>
+<hr>
+<p>When analyzing data it is very common to focus on differences in mean between groups of interest, and to represent the results with bar plots. However, the mean is just one of several summary statistics to describe a distribution (and perhaps not always the best one), and bar plots conceal a lot of potentially interesting information.</p>
+<p>While the classic t-test on the means might not be significant, you may find that your distributions of interest are actually extremely different, perhaps leading to new insights. Most importantly, you could get much more out of your data with relatively little effort. Doing something as simple as using dot plots, box plots, or violin plots for visualization may reveal interesting features.</p>
+<p>A recent paper by Guillaume Rousselet and colleagues [<a href="#ref">1</a>] reviews the benefits of robust graphical methods, clarifies the meaning of some commong statistical approaches (which might be obvious to some and a useful reminder to others) and present two useful tools to compare two distributions, namely the <strong>shift function</strong> and the <strong>difference asymmetry function</strong>. A particularly relevant recommendation is made in the conclusions, namely the splitting of a data set into a discovery and a testing sample: this is a safeguard against the inevitable increase in false positive rate that occurs when performing multiple similar tests on the same data. </p>
+<p>A last note: although using the standard error of the mean (SEM) for your error bars gives you shorter bars and thus seemingly stronger results (at least to the eyes of the naive observer), be reminded that actually SEM is often less straightforward to interpret (and thus less useful in the end) than a confidence interval of your estimate.</p>
+<h3 id="ref">References</h3>
+<p>[1] Rousselet, Guillaume A., Cyril R. Pernet, and Rand R. Wilcox. "<a href="https://www.biorxiv.org/content/early/2017/03/27/121079">Beyond differences in means: robust graphical methods to compare two groups in neuroscience.</a>" European Journal of Neuroscience (2017).</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy; Pietro Marchesi </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Pietro Marchesi ",
+  "url" : ".",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>

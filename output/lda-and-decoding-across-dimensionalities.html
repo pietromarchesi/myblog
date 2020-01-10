@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Pietro Marchesi" />
+<meta name="description" content="A comparison of LDA scores or decoding accuracies between neural recordings with different numbers of neurons may be contaminated by the dimensionality of the data, and should thus be handled with care." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Pietro Marchesi"/>
+<meta property="og:title" content="LDA score and decoding accuracy across different dimensionalities"/>
+<meta property="og:description" content="A comparison of LDA scores or decoding accuracies between neural recordings with different numbers of neurons may be contaminated by the dimensionality of the data, and should thus be handled with care."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./lda-and-decoding-across-dimensionalities.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-07-10 00:00:00+02:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/pietro-marchesi.html">
+<meta property="article:section" content="Some other stuff"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
+
+  <title>Pietro Marchesi &ndash; LDA score and decoding accuracy across different dimensionalities</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+      </a>
+      <h1><a href=".">Pietro Marchesi</a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about.html#about">About</a></li>
+
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
+          <li><a href="/category/some-other-stuff.html" target="_blank">some other stuff</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+    <h1 id="lda-and-decoding-across-dimensionalities">LDA score and decoding accuracy across different dimensionalities</h1>
+    <p>
+          Posted on 10 July 2017 in <a href="./category/some-other-stuff.html">Some other stuff</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <h1>Introduction</h1>
+<p>When analyzing neural data we are often interested in establishing contrasts between experimental conditions (i.e. seeing whether neural responses differentiate between stimulus A and stimulus B). A possible way to quantify this at the population level is by computing the LDA score (projecting the data to the one-dimensional space which achieves the highest separation between classes and then taking the difference between the centroids of the two classes). Moreover, we might want to determine whether information on a certain experimental parameter is encoded in the activity of the neurons (i.e. can be decoded from it). These two things are not unrelated, because if neural responses differentiate between conditions, then we have good reasons to suspect that a decoder will be able to learn this discrimination rule and correctly decode the variable of interest.</p>
+<p>Sometimes, it might be natural to want to use these measures to make comparisons between different recordings (in brain areas, or different animals). A problem might arise if the number of recorded neurons is different across areas/animals. Then, the difference that you see in LDA score or decoding performance might be confounded by the different dimensionality of the two datasets, and not truly reflective of information encoded in the neural response. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">sklearn.datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">p_utils</span> <span class="kn">import</span> <span class="n">lda_score</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Recording differently-sized subsets of a larger population</h2>
+<p>To test the effect of dimensionality, we suppose that we are interested in a population of neurons, and that only a certain fraction of neurons in this population is actually responsive to the experimental parameter of interest (i.e. differentiates between two conditions of interest). During an experiment, we generally only have access to the activity of a small subset of all the neurons in the population. Here, we want to investigate what happens to the LDA score and decoding accuracy if we experimentally record subsamples of different sizes from the same population. </p>
+<p>In the code below, an artificial dataset is generated in which only part of the features (i.e. neurons) are informative, while the rest is uninformative noise. We then repeatedly draw samples of increasing size from this population, corresponding to the neurons that we have actually recorded, and compute LDA score and decoding performance on these data. </p>
+<div class="highlight"><pre><span></span><span class="n">n_dim</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">n_iter</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">rs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;lda_score&#39;</span><span class="p">,</span> <span class="s1">&#39;dec_acc&#39;</span><span class="p">])</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                            <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                            <span class="n">n_features</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                            <span class="n">n_informative</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                            <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                                            <span class="n">n_repeated</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                            <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_dim</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">X_sample</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">sample</span><span class="p">]</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+        <span class="n">cvscore</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_sample</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">lda</span> <span class="o">=</span> <span class="n">lda_score</span><span class="p">(</span><span class="n">X_sample</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">cvscore</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1"># average the results and plot</span>
+<span class="n">lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">std_lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+<span class="n">std_acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_lda</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_acc</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LDA score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cross-validated accuracy score&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="image1" src="./images/output_6_0.png"></p>
+<p>This is relatively unsuprising: if we have recorded more neurons from our population, there's also a higher chance that we have recorded more of the responsive ones, and so our decoder will have access to more information, and the LDA will be able to separate the two classes more effectively. </p>
+<h2>Using dimensionality reduction to equalize the dimensionality of the datasets</h2>
+<p>It was recently suggested to me that we might be able to avoid the strong effect of dimensionality that emerges in the previous plots by applying PCA (or a dimensionality reduction method of choice) to the different datasets, in order to reduce them to the same dimensionality before computing the measures. After a quick check that four PCA components capture most of the variance in this dataset (not shown here) I try this potential solution:</p>
+<div class="highlight"><pre><span></span><span class="n">n_dim</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">n_iter</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">rs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;lda_score&#39;</span><span class="p">,</span> <span class="s1">&#39;dec_acc&#39;</span><span class="p">])</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                            <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                            <span class="n">n_features</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+                                            <span class="n">n_informative</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                                            <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">n_repeated</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                            <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_dim</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">X_sample</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">sample</span><span class="p">]</span>
+        <span class="c1"># compute the PCA transform, keeping the first 4 components</span>
+        <span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">X_sample</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_sample</span><span class="p">)</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+        <span class="n">cvscore</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_sample</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">lda</span> <span class="o">=</span> <span class="n">lda_score</span><span class="p">(</span><span class="n">X_sample</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">cvscore</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">std_lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+<span class="n">std_acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_lda</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_acc</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LDA score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cross-validated accuracy score&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="image2" src="./images/output_11_0.png"></p>
+<p>The effect of dimensionality is reduced, but clearly not eliminated!</p>
+<h2>Larger populations with the same number of responsive neurons</h2>
+<div class="highlight"><pre><span></span><span class="n">n_dim</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">n_iter</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">rs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;n_dim&#39;</span><span class="p">,</span> <span class="s1">&#39;lda_score&#39;</span><span class="p">,</span> <span class="s1">&#39;dec_acc&#39;</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_dim</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+        <span class="n">clf</span>  <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                                    <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                    <span class="n">n_features</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
+                                                    <span class="n">n_informative</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                                    <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                    <span class="n">n_repeated</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                    <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                                    <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+        <span class="n">cvscore</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">lda</span> <span class="o">=</span>  <span class="n">lda_score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">cvscore</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">std_lda</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">lda_score</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+<span class="n">std_acc</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_dim&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">dec_acc</span>
+
+<span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">lda</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_lda</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">acc</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">std_acc</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-o&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LDA score&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cross-validated accuracy score&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+    <span class="n">axis</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<h2>Take-home message</h2>
+<p>Comparing LDA score or decoding accuracy between recordings with different numbers of neurons may be subject to contamination effects due to the dimensionality of the data, and should thus be handled with care. One should not come to the conclusion that differences in LDA or decoding accuracy of two groups of neurons of different sizes reflect differences in the underlying population, because these differences might be due partially or exclusively to the sampling effects shown here. Applying PCA to equalize the dimensionality reduces but does not eliminate the magnitude of this effect in the datasets analyzed here. </p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy; Pietro Marchesi </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Pietro Marchesi ",
+  "url" : ".",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>

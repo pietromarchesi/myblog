@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Pietro Marchesi" />
+<meta name="description" content="TL;DR: Conventional statistical methods like the t-test or the ANOVA F test can perform very poorly if the data does not meet the assumptions of normality and homoscedasticity. So-called robust statistical methods have been developed which perform well even when these assumptions are violated (and we should use them)." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Pietro Marchesi"/>
+<meta property="og:title" content="A note on robust statistical methods"/>
+<meta property="og:description" content="TL;DR: Conventional statistical methods like the t-test or the ANOVA F test can perform very poorly if the data does not meet the assumptions of normality and homoscedasticity. So-called robust statistical methods have been developed which perform well even when these assumptions are violated (and we should use them)."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./robust-statistical-methods.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-10-23 00:00:00+02:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/pietro-marchesi.html">
+<meta property="article:section" content="Pietro's Data Bulletin"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
+
+  <title>Pietro Marchesi &ndash; A note on robust statistical methods</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+      </a>
+      <h1><a href=".">Pietro Marchesi</a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about.html#about">About</a></li>
+
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
+          <li><a href="/category/some-other-stuff.html" target="_blank">some other stuff</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+    <h1 id="robust-statistical-methods">A note on robust statistical methods</h1>
+    <p>
+          Posted on 23 October 2017 in <a href="./category/pietros-data-bulletin.html">Pietro's Data Bulletin</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><strong>TL;DR</strong>: Conventional statistical methods like the t-test or the ANOVA F test can perform very poorly if the data does not meet the assumptions of normality and homoscedasticity. So-called robust statistical methods have been developed which perform well even when these assumptions are violated (and we should use them).</p>
+<hr>
+<p>In neuroscience, common statistical methods to compare groups or test associations include the omnipresent t-test, the ANOVA F test, Pearson correlation, and least squares regression. And while most people are aware that these methods rely on certain assumptions, most prominently normality and homoscedasticity (equal variances), much less widespread is the awareness that <strong>violating these assumptions can strongly impact the Type I error rate (the probability of a false positive) and statistical power</strong>. </p>
+<p>In the last few decades, <strong>a range of statistical techniques known as robust methods have been developed to deal with skewness, outliers, heteroscedasticity, and curvature</strong> in the regression line, which represent the main violations of the common assumptions.  In general, these methods will perform well if the distributions are well-behaved, and will continue to control Type I error rates and provide higher power as we depart from the standard assumptions. </p>
+<p>While that is certainly good news, robust methods are generally not part of the standard statistical training of a neuroscientist, and finding the right method for your problem can be a daunting task. We <em>could</em> read the 608 pages <a href="https://www.elsevier.com/books/introduction-to-robust-estimation-and-hypothesis-testing/wilcox/978-0-12-386983-8">Introduction to Robust Estimation and Hypothesis Testing</a> by Rand Wilcox (which, from the parts I have read, seems like a great read, by the way), but we won’t. And Wilcox knows that. So, earlier this year, he joined forces with Guillaume Rousselet to write an introduction to robust methods which can reasonably fit into our schedules: <em>‘A Guide to Robust Statistical Methods in Neuroscience’</em> [<a href="#ref">1</a>]. </p>
+<p>A good chunk of the guide is dedicated to showing how and why conventional methods fail when dealing with skewed distributions, outliers, heteroscedasticity, and curvature. A few simulations are provided which show how skewness can dramatically increase false positives and destroy power, and how this can be avoided by employing robust methods which test the <em>median</em> or the <em>trimmed mean</em>. </p>
+<p><strong>While conventional statistics does provide you with ways to deal with violations of the classical assumptions, these strategies often turn out to be unsatisfactory</strong>. Testing the assumptions is perhaps the most obvious, but it never comes with the guarantee that the test will have enough power to detect deviations that can have sizeable consequences. Other approaches like discarding outliers before comparing means or transforming data are also flawed, and even rank-based and permutation methods do not always perform well. </p>
+<p>While <em>no single methods dominates in all circumstances</em>, a few general guidelines are presented in the last section of the article. Notably, <strong>always use a method which allows for heteroscedasticity, plot your data in an informative way (i.e. never a bar plot), and consider comparing multiple quantiles instead of only the central tendency</strong>. </p>
+<p>To leave us no excuses to not adopt more robust methods, there is R code available for all functions. The functions written by Wilcox and described throughout his books are available on <a href="https://dornsife.usc.edu/labs/rwilcox/software/">his webpage</a> as a <a href="https://dornsife.usc.edu/assets/sites/239/docs/Rallfun-v34.txt">single text file</a> or on Github <a href="https://github.com/nicebread/WRS">here</a>. A subset of these functions, which contains a number of robust statistical methods (and has the advantage of being more thoroughly documented) is maintained by Patrick Mair and available as the CRAN package <a href="https://cran.r-project.org/web/packages/WRS2/index.html">WRS2</a>, and is described <a href="https://dornsife.usc.edu/assets/sites/239/docs/WRS2.pdf">here</a>. And if you’re thinking ‘wait, but this code is written in R, I don’t use R’, neither do I, I just installed <a href="http://rpy2.readthedocs.io/en/version_2.8.x/introduction.html">rpy2</a> and I call the functions from Python, it's very easy to set up. </p>
+<h3 id="ref">References</h3>
+<p>[1] Wilcox, Rand R., and Guillaume A. Rousselet. "<a href="https://www.biorxiv.org/content/early/2017/06/20/151811">A guide to robust statistical methods in neuroscience.</a>" bioRxiv (2017): 151811.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy; Pietro Marchesi </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Pietro Marchesi ",
+  "url" : ".",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>

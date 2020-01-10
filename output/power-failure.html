@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Pietro Marchesi" />
+<meta name="description" content="TL;DR: Low statistical power, stemming from small sample sizes, is a serious concern for the reliability of results in neuroscience. But not all hope is lost." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Pietro Marchesi"/>
+<meta property="og:title" content="POWER TO THE PEOPLE!"/>
+<meta property="og:description" content="TL;DR: Low statistical power, stemming from small sample sizes, is a serious concern for the reliability of results in neuroscience. But not all hope is lost."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./power-failure.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-09-26 00:00:00+02:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/pietro-marchesi.html">
+<meta property="article:section" content="Pietro's Data Bulletin"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
+
+  <title>Pietro Marchesi &ndash; POWER TO THE PEOPLE!</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+      </a>
+      <h1><a href=".">Pietro Marchesi</a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about.html#about">About</a></li>
+
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
+          <li><a href="/category/some-other-stuff.html" target="_blank">some other stuff</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+    <h1 id="power-failure">POWER TO THE PEOPLE!</h1>
+    <p>
+          Posted on 26 September 2017 in <a href="./category/pietros-data-bulletin.html">Pietro's Data Bulletin</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><strong>TL;DR</strong>: Low statistical power, stemming from small sample sizes, is a serious concern for the reliability of results in neuroscience. But not all hope is lost. </p>
+<hr>
+<p>All of you are probably familiar with the concept of <strong>statistical power</strong> (i.e. the ability of a study to statistically detect an existing effect) so I’m sure no one will be surprised to find out that studies with low power are undesirable because they are more likely to miss the experimental effect that they are looking for. But before you mark this post as ‘boring’ and move on with your day, you should know that Katherine Button and colleagues, in their Nature Reviews paper [<a href="#ref">1</a>], outline two less known and perhaps more dangerous consequences of running studies with low statistical power. </p>
+<p>Firstly, <strong>lower power leads to lower positive predictive value</strong> (which is the probability that a finding reflects a true effect rather than a false positive): that is, lower power equals more chances of finding significant results which are just false positives, and lack a true underlying effect. Secondly, even when an underpowered study is able to detect a true effect, <strong>the magnitude of this effect will likely be overestimated</strong>, an effect which is known as the ‘winner’s curse’ (this is particularly unfortunate because researchers trying to replicate such a finding are going to be much more likely to fail). In addition, the authors argue that <strong>low-powered studies are more vulnerable to a range of other bias</strong>, such as vibration effects (i.e. changing your analysis method even slightly might have a sizeable impact on your results), publication bias, and selective reporting of outcomes. </p>
+<p>The most striking conclusion is that the authors draw is that <strong>the likelihood that nominally significant findings in the literature correspond to true effects is actually scaringly small</strong>, and this may be especially true in neuroscience, a field in which statistical power tends to be quite low, as the authors show by a relatively comprehensive review. In the context of animal model studies, this has also ethical implications: animal sacrifices are more difficult to justify if the resulting study is weakened to such an extent by lack of statistical power. </p>
+<p>The authors conclude by presenting a few general recommendation, broadly aimed at creating a scientific environment which values and enables replication, transparency, meta-analyses, and collaboration. Their statistical guidelines include an <strong>a priori calculation of your statistical power</strong> (although estimating effect sizes is admittedly no piece of cake) and <strong>pre-registration of the confirmatory analysis plan</strong>. The latter deals with the important difference between exploratory and confirmatory data analysis, and the fact that p-values generated during exploratory analysis do not have the same interpretation as confirmatory p-values (on this issue, I recommend <a href="http://blogs.discovermagazine.com/neuroskeptic/2015/03/31/p-values-and-exploratory-research/#.WejbTXWCxhG">this short article</a>, and to always keep in mind that if you run many exploratory tests on your data and find one that is significant with p&lt;0.05, that p-value might in fact be pretty close to meaningless). </p>
+<p>In light of all this, I think there’s only one solution: <a href="https://www.youtube.com/watch?v=RtvlBS4PMF0">power to the people!</a></p>
+<h3 id="ref">References</h3>
+<p>[1] Button, Katherine S., et al. "<a href="https://www.nature.com/nrn/journal/v14/n5/full/nrn3475.html">Power failure: why small sample size undermines the reliability of neuroscience.</a>" Nature Reviews Neuroscience 14.5 (2013): 365-376.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy; Pietro Marchesi </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Pietro Marchesi ",
+  "url" : ".",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>

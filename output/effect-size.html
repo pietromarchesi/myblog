@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="" />
+
+
+<meta name="author" content="Pietro Marchesi" />
+<meta name="description" content="TL;DR: Looking at statistical significance alone can be misleading. There are a lot of good reasons to make use, on a regular basis, of measures of effect size together with their confidence intervals, as opposed to only looking at p-values." />
+<meta name="keywords" content="">
+<meta property="og:site_name" content="Pietro Marchesi"/>
+<meta property="og:title" content="(Effect) size matters"/>
+<meta property="og:description" content="TL;DR: Looking at statistical significance alone can be misleading. There are a lot of good reasons to make use, on a regular basis, of measures of effect size together with their confidence intervals, as opposed to only looking at p-values."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="./effect-size.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2017-09-04 00:00:00+02:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="./author/pietro-marchesi.html">
+<meta property="article:section" content="Pietro's Data Bulletin"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
+
+  <title>Pietro Marchesi &ndash; (Effect) size matters</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href=".">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+      </a>
+      <h1><a href=".">Pietro Marchesi</a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="./pages/about.html#about">About</a></li>
+
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
+          <li><a href="/category/some-other-stuff.html" target="_blank">some other stuff</a></li>
+        </ul>
+      </nav>
+
+      <ul class="social">
+        <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+    <nav>
+      <a href=".">    Home
+</a>
+
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
+
+
+    </nav>
+
+<article class="single">
+  <header>
+    <h1 id="effect-size">(Effect) size matters</h1>
+    <p>
+          Posted on 04 September 2017 in <a href="./category/pietros-data-bulletin.html">Pietro's Data Bulletin</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><strong>TL;DR</strong>: looking at statistical significance alone can be misleading. There are a lot of good reasons to make use, on a regular basis, of measures of effect size together with their confidence intervals, as opposed to only looking at p-values. </p>
+<hr>
+<p>Although null-hypothesis significance testing (i.e. p-values) continues to dominate statistical inference in (but not only) neuroscience, statisticians have been complaining about the widespread use of this methodology for quite some time, and <strong>advocating a shift towards measures of effect size together with their confidence interval</strong>. </p>
+<p>It turns out that the p-value dogma has statistical weaknesses, but, perhaps more prominently, it is also accompanied by many misconceptions regarding the use and meaning of p-values. <strong>One of the most common misunderstandings is that a smaller p-value corresponds to a larger effect</strong>. However, the p-value is influenced by a number of factors, including the statistical test used, the type of data, and the sample size, and even if these factors are kept constant, its relation to the effect size is markedly nonlinear. </p>
+<p>For example, it can easily be the case that, although the strength of the effect is so small as to be completely irrelevant, a minuscule p-value is found, simply due to a very large sample size. Measures of effect size, which estimate the magnitude of the observed effect, would in this case allow us to quantitatively verify that, although statistically significant, the difference that we observe is unlikely to be scientifically meaningful. <strong>While looking at significance might be very useful, looking at significance alone might be misleading</strong>.</p>
+<p>A concise yet very insightful overview of this issue, with specific reference to neuroscience, is provided by Hentschke and Stuttgen in [<a href="#ref">1</a>]. The paper first summarizes the shortcomings of standard null-hypothesis testing, and some common misconceptions related to its practice (one of which I described above). It then introduces the notion of effect size, and provides three examples of analysis of neuroscientific datasets in which measures of effect size come to the rescue, and avoid the misleading and meaningless conclusions that would be drawn based on p-values alone. Lastly, the authors introduce a well-documented <a href="https://github.com/hhentschke/measures-of-effect-size-toolbox">Matlab toolbox</a> for calculating a variety of measures of effect size, together with analytical and bootstrap confidence intervals. If you are not familiar with measures of effect size, I would highly recommend taking a look at this article: these measures can have tremendous advantages, and with this toolbox they can be adopted with very little effort.  </p>
+<h3 id="ref">References</h3>
+<p>[1] Hentschke, Harald, and Maik C. Stüttgen. "<a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1460-9568.2011.07902.x/full">Computation of measures of effect size for neuroscience data sets.</a>" European Journal of Neuroscience 34.12 (2011): 1887-1894.</p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy; Pietro Marchesi </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " Pietro Marchesi ",
+  "url" : ".",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
+  "description": ""
+}
+</script>
+</body>
+</html>
