@@ -6,10 +6,9 @@
 
     <link rel="stylesheet" type="text/css" href="./theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="./theme/pygments/solarized-dark.min.css">
+  <link rel="stylesheet" type="text/css" href="./theme/pygments/github.min.css">
   <link rel="stylesheet" type="text/css" href="./theme/font-awesome/css/font-awesome.min.css">
 
-    <link href="./styles/custom.css" rel="stylesheet">
 
 
 
@@ -22,19 +21,19 @@
 
 
 <meta name="author" content="Pietro Marchesi" />
-<meta name="description" content="The Slurm Cookbook is meant to provide begginer Slurm users with a brief overview of Slurm and a few examples of how you can interact with it and obtain information about jobs and resources." />
+<meta name="description" content="A short overview of Slurm for beginners, focused on how you can interact with it to obtain information about jobs and resources." />
 <meta name="keywords" content="">
 <meta property="og:site_name" content="Pietro Marchesi"/>
 <meta property="og:title" content="The Slurm Cookbook"/>
-<meta property="og:description" content="The Slurm Cookbook is meant to provide begginer Slurm users with a brief overview of Slurm and a few examples of how you can interact with it and obtain information about jobs and resources."/>
+<meta property="og:description" content="A short overview of Slurm for beginners, focused on how you can interact with it to obtain information about jobs and resources."/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:url" content="./slurm-cookbook.html"/>
 <meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2018-04-26 00:00:00+02:00"/>
+<meta property="article:published_time" content="2018-06-10 00:00:00+02:00"/>
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="./author/pietro-marchesi.html">
-<meta property="article:section" content="Tutorials"/>
-<meta property="og:image" content="/images/profile1.jpg">
+<meta property="article:section" content="tutorials"/>
+<meta property="og:image" content="http://pietromarchesi.net/images/profile1.jpg">
 
   <title>Pietro Marchesi &ndash; The Slurm Cookbook</title>
 
@@ -43,7 +42,7 @@
   <aside>
     <div>
       <a href=".">
-        <img src="/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
+        <img src="http://pietromarchesi.net/images/profile1.jpg" alt="Pietro Marchesi" title="Pietro Marchesi">
       </a>
       <h1><a href=".">Pietro Marchesi</a></h1>
 
@@ -51,16 +50,17 @@
       <nav>
         <ul class="list">
           <li><a href="./pages/about.html#about">About</a></li>
+          <li><a href="./pages/research-and-publications.html#research-and-publications">Research and publications</a></li>
 
-          <li><a href="/category/pietros-data-bulletin.html" target="_blank">Pietro's Data Bulletin</a></li>
-          <li><a href="/category/tutorials.html" target="_blank">Tutorials</a></li>
-          <li><a href="/category/some-other-stuff.html" target="_blank">Some other stuff</a></li>
+          <li><a href="/category/pietros-data-bulletin.html" target="_blank">pietro's data bulletin</a></li>
+          <li><a href="/category/tutorials.html" target="_blank">tutorials</a></li>
         </ul>
       </nav>
 
       <ul class="social">
         <li><a class="sc-twitter" href="https://twitter.com/pietro_marchesi" target="_blank"><i class="fa fa-twitter"></i></a></li>
         <li><a class="sc-github" href="https://github.com/pietromarchesi" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-google scholar" href="https://scholar.google.com/citations?hl=en&user=UCF9R-4AAAAJ" target="_blank"><i class="fa fa-google scholar"></i></a></li>
       </ul>
     </div>
 
@@ -72,9 +72,9 @@
       <a href=".">    Home
 </a>
 
-      <a href="/archives.html">Archives</a>
-      <a href="/categories.html">Categories</a>
-      <a href="/tags.html">Tags</a>
+      <a href="/archives">Archives</a>
+      <a href="/categories">Categories</a>
+      <a href="/tags">Tags</a>
 
 
     </nav>
@@ -83,7 +83,7 @@
   <header>
     <h1 id="slurm-cookbook">The Slurm Cookbook</h1>
     <p>
-          Posted on 26 April 2018 in <a href="./category/tutorials.html">Tutorials</a>
+          Posted on 10 June 2018 in <a href="./category/tutorials.html">tutorials</a>
 
 
     </p>
@@ -91,105 +91,102 @@
 
 
   <div>
-    <p>The Slurm Cookbook is meant to provide you with a brief overview of Slurm and a few examples of how you can interact with it and obtain information about jobs and resources. </p>
+    <p>The Slurm Cookbook is meant to provide you with a brief overview of Slurm and a few examples of how you can interact with it and obtain information about jobs and resources.</p>
 <p>Of course, all of the information presented here can be found by in the Slurm documentation, but if you are just getting started with Slurm it may not be obvious where to look for things.</p>
-<p><strong>Note</strong>: The Cookbook does not really cover batch scripts, because there are many other guides online which provide plenty of examples. </p>
+<p><strong>Note</strong>: The Cookbook does not really cover batch scripts, because there are many other guides online which provide plenty of examples.</p>
 <h2>A three course meal</h2>
 <p>First of all, what does Slurm actually do? Slurm is a cluster management and job scheduling system for Linux clusters (an ensemble of connected computers running Linux). As such, Slurm is mainly concerned with three things:</p>
 <ol>
 <li>
-<p><strong>Allocating resources to users so that they can perform work</strong> (by resources, we mean the computers (or nodes) which form the cluster). </p>
+<p><strong>Allocating resources to users so that they can perform work</strong> (by resources, we mean the computers (or nodes) which form the cluster).</p>
 </li>
 <li>
-<p><strong>Managing a queue of pending jobs.</strong> As long as there are free resources on the cluster, Slurm can simply give users the resources they need. But at some point, the requests of the various users may be incompatible. It is Slurm's job to decide what to execute when, and trying to do that in a smart way so as to use the resources efficiently. </p>
+<p><strong>Managing a queue of pending jobs.</strong> As long as there are free resources on the cluster, Slurm can simply give users the resources they need. But at some point, the requests of the various users may be incompatible. It is Slurm's job to decide what to execute when, and trying to do that in a smart way so as to use the resources efficiently.</p>
 </li>
 <li>
-<p><strong>Handling the launch, executing, and monitoring of jobs submitted by users.</strong> </p>
+<p><strong>Handling the launch, executing, and monitoring of jobs submitted by users.</strong></p>
 </li>
 </ol>
 <h2>The main ingredients</h2>
 <p>Let's first get an overview of the main user commands that Slurm provides, before looking at some examples of how we can use them.</p>
 <ul>
-<li><code>squeue</code> allows you to view information about jobs. In particular, you will see which jobs are pending, which are running, which are completing, and which are completed. These are the states that a job will encounter throughout its lifetime assuming everything goes according to plan (but a job may also fail or be cancelled for several reasons). </li>
-<li><code>salloc</code> provides a Slurm job allocation, i.e. a set of resources. It then runs a command specified by the user, and when command is complete, frees up the job allocation. </li>
-<li><code>sbatch</code>: submit batch script to run jobs non-interactively on the compute nodes. </li>
+<li><code>squeue</code> allows you to view information about jobs. In particular, you will see which jobs are pending, which are running, which are completing, and which are completed. These are the states that a job will encounter throughout its lifetime assuming everything goes according to plan (but a job may also fail or be cancelled for several reasons).</li>
+<li><code>salloc</code> provides a Slurm job allocation, i.e. a set of resources. It then runs a command specified by the user, and when command is complete, frees up the job allocation.</li>
+<li><code>sbatch</code>: submit batch script to run jobs non-interactively on the compute nodes.</li>
 <li><code>srun</code> Runs parallel jobs on allocated resources (but can also request resources directly).</li>
-<li><code>sacct</code> displays accounting data (i.e. data on past jobs which are not on the queue anymore). </li>
-<li><code>sancel</code> can be used to cancel jobs on the queue, or more generally to send them signals. </li>
+<li><code>sacct</code> displays accounting data (i.e. data on past jobs which are not on the queue anymore).</li>
+<li><code>sancel</code> can be used to cancel jobs on the queue, or more generally to send them signals.</li>
 <li><code>sinfo</code> gives you information about the nodes and partitions which compose the cluster, such as the number of nodes and their state.</li>
 <li><code>scontrol</code> allows you to view and modify Slurm configurations (but it's mostly for system administrators).</li>
 </ul>
 <p>A handy summary of these commands together with some options can also be found <a href="https://slurm.schedmd.com/pdfs/summary.pdf">here</a>.</p>
 <h2>A note on <code>sbatch</code>, <code>salloc</code>, and <code>srun</code></h2>
-<p>It may be confusing at first to distinguish between these three commands. In practice, you can think of it as follows: what <code>salloc</code> and <code>sbatch</code> do is allocate resources for jobs (i.e. they tell the system: "I need these many CPUs with this much memory "), whereas <code>srun</code> uses those resources to launch parallel jobs. The difference between <code>sbatch</code> and <code>salloc</code> is that <code>sbatch</code> is used to submit batch scripts which run non-interactively on the compute nodes, whereas <code>salloc</code> can get you the resources and allow you to run interactive commands on the nodes. </p>
-<p><code>srun</code> is generally launched within a job allocation, meaning that either <code>salloc</code> or <code>sbatch</code> have allocated the resources, and <code>srun</code> inherits these resources and the relevant options (which you could also overwrite). But <code>srun</code> can also fight for itself: if is called outside a job allocation, it can claim the necessary resources directly. </p>
+<p>It may be confusing at first to distinguish between these three commands. In practice, you can think of it as follows: what <code>salloc</code> and <code>sbatch</code> do is allocate resources for jobs (i.e. they tell the system: "I need these many CPUs with this much memory "), whereas <code>srun</code> uses those resources to launch parallel jobs. The difference between <code>sbatch</code> and <code>salloc</code> is that <code>sbatch</code> is used to submit batch scripts which run non-interactively on the compute nodes, whereas <code>salloc</code> can get you the resources and allow you to run interactive commands on the nodes.</p>
+<p><code>srun</code> is generally launched within a job allocation, meaning that either <code>salloc</code> or <code>sbatch</code> have allocated the resources, and <code>srun</code> inherits these resources and the relevant options (which you could also overwrite). But <code>srun</code> can also fight for itself: if is called outside a job allocation, it can claim the necessary resources directly.</p>
 <h2>Some good recipes</h2>
-<p>This part contains a few examples of how you can use some of the main user command. </p>
+<p>This part contains a few examples of how you can use some of the main user command.</p>
 <h3>Inspecting the queue with <code>squeue</code></h3>
 <p>Let's start simple: let's look at the current queue using <code>squeue</code>. Sometimes there may be a lot of jobs on the queue belonging to other users, which can make it difficult to check on your own jobs. You can filter the jobs that <code>squeue</code> displays by passing the <code>--user</code> parameter.</p>
-<div class="highlight"><pre><span></span>squeue --user=&lt;myusername&gt;
-</pre></div>
-
-
+<p>squeue --user=<myusername></p>
 <p>Generally <code>squeue</code> cuts the name of the job to a few characters, which can be annoying. It would be nicer to have it display the full job name. The <code>--format</code> parameter comes to the rescue</p>
 <div class="highlight"><pre><span></span>squeue --format=&quot;%.8i %.9P %18j %10u %.8T %.12M %9N&quot;
 </pre></div>
 
 
-<p>By default Slurm only allocates 8 characters to the job name, so in the example above, for the field <code>j</code> which corresponds to job name, we can change <code>%.8j</code> to <code>%18j</code> to make sure the full name gets displayed. Removing the dot aligns the text to the left. In the <a href="https://slurm.schedmd.com/squeue.html">documentation for <code>squeue</code></a> you can find all the fields which you can pass to <code>--format</code> and format them to your liking. </p>
+<p>By default Slurm only allocates 8 characters to the job name, so in the example above, for the field <code>j</code> which corresponds to job name, we can change <code>%.8j</code> to <code>%18j</code> to make sure the full name gets displayed. Removing the dot aligns the text to the left. In the <a href="https://slurm.schedmd.com/squeue.html">documentation for <code>squeue</code></a> you can find all the fields which you can pass to <code>--format</code> and format them to your liking.</p>
 <p>Of course, we don't want to have to type this every time. What we can do instead is creating an alias. Let's copy the following into the <code>.bashrc</code> file (which is in your home directory):</p>
 <div class="highlight"><pre><span></span>alias squeue=&#39;squeue --format=&quot;%.8i %.9P %18j %10u %.8T %.12M %9N&quot;&#39;
 </pre></div>
 
 
-<p>Now, we can have our nicely formatted output by simply typing <code>squeue</code>. </p>
-<p><strong>NOTE:</strong>  The <code>.bashrc</code> script is executed every time you start an interactive shell on the cluster (i.e. when you log in), and it can be used to initialize a bunch of useful stuff. Changes you make it will not have any effect unless you log out and log back in or directly source it by running <code>source ~/.bashrc</code>.</p>
-<p>Note that <code>squeue</code> also supports a <code>--Format</code> parameter. Generally, <code>--Format</code> is more readable (for job name you would pass <code>name</code> instead of <code>j</code>) and has more fields (in <code>--format</code>, since it only uses single letters, at some point the letters run out), but <code>--format</code> is more flexible for formatting the output (you can't specify the number of characters using <code>--Format</code> as far as I know). </p>
+<p>Now, we can have our nicely formatted output by simply typing <code>squeue</code>.</p>
+<p><strong>NOTE:</strong> The <code>.bashrc</code> script is executed every time you start an interactive shell on the cluster (i.e. when you log in), and it can be used to initialize a bunch of useful stuff. Changes you make it will not have any effect unless you log out and log back in or directly source it by running <code>source ~/.bashrc</code>.</p>
+<p>Note that <code>squeue</code> also supports a <code>--Format</code> parameter. Generally, <code>--Format</code> is more readable (for job name you would pass <code>name</code> instead of <code>j</code>) and has more fields (in <code>--format</code>, since it only uses single letters, at some point the letters run out), but <code>--format</code> is more flexible for formatting the output (you can't specify the number of characters using <code>--Format</code> as far as I know).</p>
 <p>Here is an example using <code>--Format</code>:</p>
 <div class="highlight"><pre><span></span>squeue --user=&lt;myusername&gt; --Format=jobid,username,account,statecompact,starttime,timelimit,numcpus
 </pre></div>
 
 
-<hr />
+<hr>
 <h3>Viewing system properties and state with <code>sinfo</code></h3>
-<p>Let's not forget to take a careful look at our cluster, as this may influence how we decide to design or run our applications. By simply running <code>sinfo</code>, we can take a look at the partitions: their availability, their state, how many nodes they have, etc. </p>
+<p>Let's not forget to take a careful look at our cluster, as this may influence how we decide to design or run our applications. By simply running <code>sinfo</code>, we can take a look at the partitions: their availability, their state, how many nodes they have, etc.</p>
 <p>We can also take a look at the individual nodes, using the <code>-N</code> option. To include some more information in the output (for example the memory of each node) we can pass the <code>-l</code> flag (compactly, <code>sinfo -Nl</code>).</p>
 <p>A very useful additional field is the number of cores on each node, by using <code>--format</code> and the <code>C</code> field.</p>
 <div class="highlight"><pre><span></span>sinfo -N --format &quot;%.10n %.9P %.15C %.10m %.10O %.8t&quot;
 </pre></div>
 
 
-<p>On the cluster of the lab, the output looks as follows: </p>
-<div class="highlight"><pre><span></span> HOSTNAMES PARTITION   CPUS(A/I/O/T)     MEMORY   CPU_LOAD    STATE
-  csn-cpu1      cpu*        4/8/0/12      31996      10.44      mix
-  csn-cpu2      cpu*       2/10/0/12      31996       2.02      mix
-  csn-cpu3      cpu*       0/12/0/12      31996       0.01     idle
-  csn-cpu4      cpu*       1/11/0/12      31996       1.01      mix
-  csn-cpu5      cpu*       0/12/0/12      31996       0.01     idle
-  csn-cpu6      cpu*       0/40/0/40     128736       0.01     idle
-  csn-cpu7      cpu*       0/40/0/40     128735       0.01     idle
-  csn-cpu8      cpu*       0/40/0/40     128736       0.01     idle
-  csn-cpu9      cpu*      12/28/0/40     128736       8.50      mix
+<p>On the cluster of the lab, the output looks as follows:</p>
+<div class="highlight"><pre><span></span> HOSTNAMES PARTITION   CPUS(A/I/O/T)     MEMORY   CPU\_LOAD    STATE
+  csn-cpu1      cpu\*        4/8/0/12      31996      10.44      mix
+  csn-cpu2      cpu\*       2/10/0/12      31996       2.02      mix
+  csn-cpu3      cpu\*       0/12/0/12      31996       0.01     idle
+  csn-cpu4      cpu\*       1/11/0/12      31996       1.01      mix
+  csn-cpu5      cpu\*       0/12/0/12      31996       0.01     idle
+  csn-cpu6      cpu\*       0/40/0/40     128736       0.01     idle
+  csn-cpu7      cpu\*       0/40/0/40     128735       0.01     idle
+  csn-cpu8      cpu\*       0/40/0/40     128736       0.01     idle
+  csn-cpu9      cpu\*      12/28/0/40     128736       8.50      mix
   csn-gpu1       gpu       4/36/0/40     257675       0.19      mix
 </pre></div>
 
 
-<p>Here, memory is expressed in megabytes. Note that CPUS on each node are presented in the A/I/O/T format, which stands for allocated/idle/other (offline/down)/total. You can see that the state is <code>idle</code> when no cpu cores are allocated, and <code>mix</code> when some but not all the cores are being used. The <code>CPU_LOAD</code> on the other hand is an indication of how much work we are giving to our nodes. </p>
+<p>Here, memory is expressed in megabytes. Note that CPUS on each node are presented in the A/I/O/T format, which stands for allocated/idle/other (offline/down)/total. You can see that the state is <code>idle</code> when no cpu cores are allocated, and <code>mix</code> when some but not all the cores are being used. The <code>CPU_LOAD</code> on the other hand is an indication of how much work we are giving to our nodes.</p>
 <p>We can obtain a similar result with the <code>--Format</code> parameter</p>
 <div class="highlight"><pre><span></span>sinfo -N --Format=nodehost,cpusstate,cpusload,memory,statecompact
 </pre></div>
 
 
 <p>Lastly, I may want to view information only of the nodes that I am currently using. We can achieve this by first using <code>squeue</code> to find out where my jobs are running, create a variable called <code>mynodes</code> by parsing the output of <code>squeue</code>, and then use it in the call to <code>sinfo</code>:</p>
-<div class="highlight"><pre><span></span>mynodes=$(squeue --user=pmarche1 -o &quot;%N&quot; | grep csn | tr &quot;\n&quot; &quot;,&quot;)
+<div class="highlight"><pre><span></span>mynodes=$(squeue --user=pmarche1 -o &quot;%N&quot; | grep csn | tr &quot;\\n&quot; &quot;,&quot;)
 sinfo -N --nodes &quot;$mynodes&quot;  --Format=nodehost,cpusstate,cpusload,memory,statecompact
 </pre></div>
 
 
-<hr />
+<hr>
 <h3>Reviewing past jobs with <code>sacct</code></h3>
 <p>If we want to find out information about jobs which are not on the queue anymore (so they don't show up with <code>squeue</code>) we can resort to <code>sacct</code>.</p>
-<p>For instance, we may be interested in finding out on which compute nodes our jobs ended up. We can specify a list of job IDs, as well as a list of fields for the <code>--format</code> option. </p>
+<p>For instance, we may be interested in finding out on which compute nodes our jobs ended up. We can specify a list of job IDs, as well as a list of fields for the <code>--format</code> option.</p>
 <div class="highlight"><pre><span></span>sacct --jobs=7058,7057 --format=User,JobID,account,AllocNodes,NodeList,Timelimit,elapsed,ReqMem,MaxRss,ExitCode
 </pre></div>
 
@@ -205,10 +202,10 @@ sinfo -N --nodes &quot;$mynodes&quot;  --Format=nodehost,cpusstate,cpusload,memo
 </pre></div>
 
 
-<p>This allocates 20 characters to the field <code>JobName</code>. Again, you can use aliases to avoid having to remember the full command. </p>
-<hr />
+<p>This allocates 20 characters to the field <code>JobName</code>. Again, you can use aliases to avoid having to remember the full command.</p>
+<hr>
 <h3>Running interactive jobs</h3>
-<p>In some occasions we may want to run interactive jobs on one or more nodes. To do so, you can call <code>salloc</code> and then start an interactive session using <code>srun</code>. </p>
+<p>In some occasions we may want to run interactive jobs on one or more nodes. To do so, you can call <code>salloc</code> and then start an interactive session using <code>srun</code>.</p>
 <div class="highlight"><pre><span></span>salloc --partition &lt;partition&gt; srun -N1 --pty /bin/bash
 </pre></div>
 
@@ -219,7 +216,7 @@ sinfo -N --nodes &quot;$mynodes&quot;  --Format=nodehost,cpusstate,cpusload,memo
 </pre></div>
 
 
-<hr />
+<hr>
 <h3>Killing jobs with <code>scancel</code></h3>
 <p>Lastly, let's kill some jobs. The most basic way is to pass a job ID to <code>scancel</code>, for instance <code>scancel 3425</code>. But suppose you have many jobs on the queue which need to be cancelled: copy-pasting each job ID can take forever. Luckily, there are many ways in which you can constrain the <code>scancel</code> operation. For instance, you can kill all your jobs with</p>
 <div class="highlight"><pre><span></span>scancel --user=&lt;myusername&gt; 
@@ -236,7 +233,7 @@ sinfo -N --nodes &quot;$mynodes&quot;  --Format=nodehost,cpusstate,cpusload,memo
 </pre></div>
 
 
-<p>And of course combine all these options however you want. </p>
+<p>And of course combine all these options however you want.</p>
   </div>
   <div class="tag-cloud">
     <p>
@@ -264,7 +261,7 @@ sinfo -N --nodes &quot;$mynodes&quot;  --Format=nodehost,cpusstate,cpusload,memo
   "@type" : "Blog",
   "name": " Pietro Marchesi ",
   "url" : ".",
-  "image": "/images/profile1.jpg",
+  "image": "http://pietromarchesi.net/images/profile1.jpg",
   "description": ""
 }
 </script>

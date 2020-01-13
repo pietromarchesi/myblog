@@ -46,12 +46,12 @@ AUTHOR_FEED_RSS = None
 
 # Blogroll
 LINKS = (('pietro\'s data bulletin', '/category/pietros-data-bulletin.html'),
-         ('tutorials', '/category/tutorials.html'),
-	 ('some other stuff', '/category/some-other-stuff.html'),)
+         ('tutorials', '/category/tutorials.html'))
 
 # Social widget
 SOCIAL = (('twitter', 'https://twitter.com/pietro_marchesi'),
-          ('github', 'https://github.com/pietromarchesi'),)
+          ('github', 'https://github.com/pietromarchesi'),
+	  ('google scholar', 'https://scholar.google.com/citations?hl=en&user=UCF9R-4AAAAJ'))
 
 DEFAULT_PAGINATION = 10
 
